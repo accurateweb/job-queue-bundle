@@ -17,24 +17,25 @@ namespace Accurateweb\JobQueueBundle\DependencyInjection\CompilerPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 
 class BackgroundJobRepositoryCompilerPass implements CompilerPassInterface
 {
-  public function process (ContainerBuilder $container)
+  public function process(ContainerBuilder $container)
   {
-    $param = $container->getParameter('aw_bg.background_job_repository');
-
-    try
+    $config = $config = $container->getExtensionConfig('accurateweb_job_queue');
+    $config = $config[0];
+    
+    if (isset($config['configuration'], $config['configuration']['repository_service']))
     {
+      $param = $config['configuration']['repository_service'];
+      
       $repository = $container->getDefinition($param);
+      $manager = $container->getDefinition('aw.bg_job.background_job_manager');
+      $manager->setArgument(0, $repository);
     }
-    catch (ServiceNotFoundException $e)
-    {
-
-    }
-
-    $manager = $container->getDefinition('aw.bg_job.background_job_manager');
-    $manager->setArgument(0, $repository);
   }
-
+  
 }

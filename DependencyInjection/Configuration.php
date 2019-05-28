@@ -31,7 +31,17 @@ class Configuration implements ConfigurationInterface
     $treeBuilder = new TreeBuilder();
     $rootNode = $treeBuilder->root('accurateweb_background_job');
 
-
+    $rootNode
+      ->addDefaultsIfNotSet()
+        ->children()
+          ->arrayNode('configuration')
+          ->addDefaultsIfNotSet()
+          ->children()
+            ->scalarNode('uuid')->isRequired()->end()
+            ->scalarNode('repository_service')->isRequired()->end()
+          ->end()
+        ->end()
+      ->end();
 
     return $treeBuilder;
   }
