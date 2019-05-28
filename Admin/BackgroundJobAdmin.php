@@ -84,7 +84,7 @@ class BackgroundJobAdmin extends AbstractAdmin
     $filter
       ->add('name')
       ->add('clsid', 'doctrine_orm_string', [
-        'label' => 'Задача',
+        'label' => 'Task',
       ], 'choice', [
           'choices' => $taskChoices,
         ]

@@ -1,5 +1,17 @@
 # JobQueueBundle
-Config sample:  
+
+
+Step 1: Download the Bundle
+---------------------------
+
+Open a command console, enter your project directory and execute the
+following command to download the latest stable version of this bundle:
+
+```console
+$ composer require accurateweb/job-queue-bundle
+```
+Step 2: Enable the Bundle
+-------------------------
 config.yml
 ```
 accurateweb_job_queue:
@@ -43,7 +55,8 @@ class BackgroundJobRepository extends EntityRepository implements BackgroundJobR
   }
 }
 ```
-Usage sample:  
+Usage sample
+-------------------------
 Service class:
 ```
 class CacheClearBackgroundJob implements BackgroundJobInterface
