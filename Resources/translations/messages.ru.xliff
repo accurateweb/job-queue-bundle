@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="">
+        <body>
+           <trans-unit id="Name">
+             <source>Name</source>
+             <target>Имя</target>
+           </trans-unit>
+           <trans-unit id="Created At">
+             <source>Created At</source>
+             <target>Создано</target>
+           </trans-unit>
+           <trans-unit id="Finished At">
+             <source>Finished At</source>
+             <target>Завершено</target>
+           </trans-unit>
+           <trans-unit id="State">
+             <source>State</source>
+             <target>Статус</target>
+           </trans-unit>
+           <trans-unit id="Command">
+             <source>Command</source>
+             <target>Команда</target>
+           </trans-unit>
+           <trans-unit id="Status Code">
+             <source>Status Code</source>
+             <target>Результат</target>
+           </trans-unit>
+           <trans-unit id="Output">
+             <source>Output</source>
+             <target>Лог</target>
+           </trans-unit>
+       </body>
+    </file>
+</xliff>

@@ -1,0 +1,60 @@
+parameters:
+  aw_bg.background_job_repository: ~
+  aw_bg.admin_name: 'Фоновые задачи'
+  aw_bg.admin_group: settings
+  aw.bg_job.uid: 'background-job'
+services:
+  aw.bg_job.php_command_line:
+    class: Accurateweb\JobQueueBundle\Service\Command\PhpCommandLineResolver
+    arguments: ['%kernel.root_dir%', '%php_executable%']
+
+  aw.bg_job.daemon_pid_storage:
+    class: Accurateweb\JobQueueBundle\Service\DaemonPidStorage
+    arguments: ['%kernel.root_dir%/../var/logs']
+
+  aw.bg_job.launcher.factory:
+    class: Accurateweb\JobQueueBundle\Service\Command\CommandLineLauncherFactory
+    arguments: ['@aw.bg_job.php_command_line', '@aw.bg_job.logger.factory', '%kernel.environment%']
+
+  aw.bg_job.background_job_log_file_resolver:
+    class: Accurateweb\JobQueueBundle\Service\Logger\BackgroundJobLogFileResolver
+    arguments: ['%kernel.root_dir%/../var/logs']
+
+  aw.bg_job.logger.factory:
+    class: Accurateweb\JobQueueBundle\Service\Logger\BackgroundJobLoggerFactory
+    arguments: ['@aw.bg_job.background_job_log_file_resolver']
+
+  aw.bg_job.background_job_pool:
+    class: Accurateweb\JobQueueBundle\Service\BackgroundJob\BackgroundJobPool
+
+  aw.bg_job.background_job_manager:
+    class: Accurateweb\JobQueueBundle\Service\BackgroundJob\BackgroundJobManager
+    arguments: [~, '@aw.bg_job.background_job_pool', '@event_dispatcher', '@doctrine.orm.entity_manager']
+
+  aw.bg_job.background_job_dispatcher:
+    class: Accurateweb\JobQueueBundle\Service\BackgroundJobDispatcher\BackgroundJobDispatcher
+    arguments:
+     - '@aw.bg_job.background_job_manager'
+     - '@event_dispatcher'
+     - '@doctrine.orm.entity_manager'
+     - '@aw.bg_job.background_job_pool'
+     - '@aw.bg_job.launcher.factory'
+     - '%aw.bg_job.uid%'
+
+  aw.bg_job.interupt:
+    class: Accurateweb\JobQueueBundle\EventListener\InterruptJobs
+    arguments: ['@doctrine.orm.entity_manager', '@aw.bg_job.background_job_manager']
+    tags:
+      - { name: kernel.event_listener, event: background_job.dispatch.start, method: onStart }
+
+  aw.bg_job.admin:
+    class: Accurateweb\JobQueueBundle\Admin\BackgroundJobAdmin
+    arguments: [~, ~, 'AccuratewebJobQueueBundle:BackgroundJobCRUD', '@aw.bg_job.background_job_log_file_resolver']
+    tags:
+      - { name: sonata.admin, manager_type: orm, group: '%aw_bg.admin_group%', label: '%aw_bg.admin_name%' }
+
+  aw.bg_job.repeat_listener:
+    class: Accurateweb\JobQueueBundle\EventListener\RepeatJobListener
+    arguments: ['@aw.bg_job.background_job_manager']
+    tags:
+      - { name: kernel.event_listener, event: job.end, method: onJobEnd }
