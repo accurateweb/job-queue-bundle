@@ -3,7 +3,7 @@
   "type": "project",
   "autoload": {
     "psr-4" : {
-      "Accurateweb\\AccuratewebJobQueueBundle\\" : ""
+      "Accurateweb\\JobQueueBundle\\" : ""
     }
   },
   "require": {
@@ -13,6 +13,7 @@
     "sonata-project/admin-bundle": ">=3.18.0",
     "sonata-project/doctrine-orm-admin-bundle": ">=3.0",
     "symfony/symfony": ">=2.8",
-    "twig/twig": ">=2.0"
+    "twig/twig": ">=2.0",
+    "cocur/background-process": "^0.7.0"
   }
 }
