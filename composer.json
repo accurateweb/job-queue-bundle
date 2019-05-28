@@ -1,0 +1,18 @@
+{
+  "name": "accurateweb/job-queue-bundle",
+  "type": "project",
+  "autoload": {
+    "psr-4" : {
+      "Accurateweb\\AccuratewebJobQueueBundle\\" : ""
+    }
+  },
+  "require": {
+    "php": ">=7.0",
+    "doctrine/doctrine-bundle": ">=1.4",
+    "doctrine/orm": ">=2.4.8",
+    "sonata-project/admin-bundle": ">=3.18.0",
+    "sonata-project/doctrine-orm-admin-bundle": ">=3.0",
+    "symfony/symfony": ">=2.8",
+    "twig/twig": ">=2.0"
+  }
+}
