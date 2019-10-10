@@ -56,14 +56,25 @@ class BackgroundJobDispatcher
   public function dispatch()
   {
     $this->eventDispatcher->dispatch('background_job.dispatch.start', new BackgroundJobDispatcherEvent());
+    $signalDispatch = function_exists('pcntl_signal_dispatch');
 
     while(!$this->break)
     {
+      if ($signalDispatch)
+      {
+        pcntl_signal_dispatch();
+      }
+
       $jobs = $this->backgroundJobManager->getQueuedJobs();
 
       if (!count($jobs))
       {
         sleep(30);
+      }
+
+      if ($signalDispatch)
+      {
+        pcntl_signal_dispatch();
       }
 
       foreach ($jobs as $job)
@@ -95,6 +106,16 @@ class BackgroundJobDispatcher
         $this->entityManager->flush($job);
 
         $this->eventDispatcher->dispatch('job.end', new BackgroundJobEvent($jobService, $job));
+
+        if ($signalDispatch)
+        {
+          pcntl_signal_dispatch();
+        }
+
+        if ($this->break)
+        {
+          break 2;
+        }
       }
 
       /*
@@ -116,5 +137,10 @@ class BackgroundJobDispatcher
   public function getUid ()
   {
     return $this->uid;
+  }
+
+  public function stop ()
+  {
+    $this->break = true;
   }
 }
