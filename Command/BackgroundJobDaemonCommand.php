@@ -31,7 +31,7 @@ class BackgroundJobDaemonCommand extends ContainerAwareCommand
   protected function configure ()
   {
     $this
-      ->setName('background-job:daemon')
+      ->setName('background-job:old-daemon')
       ->addArgument('argument', InputArgument::OPTIONAL, 'start|stop|restart', 'start');
   }
 
